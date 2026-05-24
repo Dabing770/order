@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="fi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>餐厅点单</title>
+  <title>Yi Sushi</title>
   <style>
     :root {
       --bg: #f6f4ef;
@@ -34,8 +34,7 @@
         radial-gradient(circle at top left, rgba(217, 72, 40, 0.09), transparent 30rem),
         linear-gradient(180deg, #fffaf3 0%, var(--bg) 34%, #efebe3 100%);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Microsoft YaHei", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       line-height: 1.5;
     }
 
@@ -47,11 +46,6 @@
 
     button {
       cursor: pointer;
-    }
-
-    img {
-      display: block;
-      width: 100%;
     }
 
     .app {
@@ -66,8 +60,8 @@
       min-height: 230px;
       border-radius: 26px;
       background:
-        linear-gradient(90deg, rgba(22, 20, 18, 0.82), rgba(22, 20, 18, 0.32)),
-        url("https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1400&q=80") center/cover;
+        radial-gradient(circle at 88% 20%, rgba(255, 255, 255, 0.22), transparent 13rem),
+        linear-gradient(135deg, #161412 0%, #3f1812 48%, #156157 100%);
       box-shadow: var(--shadow);
       color: #fff;
     }
@@ -102,6 +96,30 @@
       margin: 14px 0 0;
       color: rgba(255, 255, 255, 0.86);
       font-size: 1rem;
+    }
+
+    .payment-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      border: 1px solid rgba(230, 224, 214, 0.96);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 10px 28px rgba(37, 32, 26, 0.08);
+      padding: 13px 15px;
+      color: #343230;
+      font-weight: 900;
+    }
+
+    .payment-note span {
+      border-radius: 999px;
+      background: #edf6f3;
+      color: var(--accent);
+      padding: 5px 10px;
+      font-size: 0.82rem;
+      white-space: nowrap;
     }
 
     .layout {
@@ -181,14 +199,8 @@
       box-shadow: 0 10px 30px rgba(37, 32, 26, 0.07);
     }
 
-    .dish-image {
-      height: 180px;
-      object-fit: cover;
-      background: #ddd4c8;
-    }
-
     .dish-body {
-      padding: 14px;
+      padding: 16px;
     }
 
     .dish-head {
@@ -357,6 +369,15 @@
       background: #fffaf4;
       color: var(--muted);
       padding: 18px;
+      text-align: center;
+    }
+
+    .empty-menu {
+      border: 1px dashed #d8cfc2;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--muted);
+      padding: 24px;
       text-align: center;
     }
 
@@ -570,66 +591,71 @@
 </head>
 <body>
   <main class="app">
-    <section class="hero" aria-label="餐厅介绍">
+    <section class="hero" aria-label="Ravintolan esittely">
       <div class="hero-content">
-        <p class="eyebrow">Today&apos;s Menu</p>
-        <h1>小馆即点即享</h1>
-        <p>选择菜品数量，给每道菜添加备注，提交后自动整理成短信订单内容。</p>
+        <p class="eyebrow">Ravintola</p>
+        <h1>Yi Sushi</h1>
+        <p>Valitse annokset, lisää halutessasi huomioita ja lähetä tilaus suoraan ravintolalle.</p>
       </div>
     </section>
+
+    <div class="payment-note">
+      <strong>Maksaminen maksetaan kassalla</strong>
+      <span>Kassa</span>
+    </div>
 
     <div class="layout">
       <section class="menu-area" aria-labelledby="menuTitle">
         <div class="section-title">
-          <h2 id="menuTitle">菜单</h2>
-          <span id="menuCount">0 道菜</span>
+          <h2 id="menuTitle">Menu</h2>
+          <span id="menuCount">0 annosta</span>
         </div>
 
-        <div class="category-tabs" id="categoryTabs" aria-label="菜品分类"></div>
+        <div class="category-tabs" id="categoryTabs" aria-label="Kategoriat"></div>
         <div class="menu-grid" id="menuGrid"></div>
       </section>
 
-      <aside class="checkout-area" aria-label="购物车和提交订单">
+      <aside class="checkout-area" aria-label="Ostoskori ja tilaus">
         <section class="checkout-card cart-card">
           <div class="cart-header">
-            <h2>购物车</h2>
-            <span class="cart-count" id="cartCount">0 件</span>
+            <h2>Ostoskori</h2>
+            <span class="cart-count" id="cartCount">0 kpl</span>
           </div>
           <div class="cart-items" id="cartItems"></div>
           <div class="cart-total">
-            <span>总价</span>
+            <span>Yhteensä</span>
             <span id="cartTotal">0.00€</span>
           </div>
         </section>
 
         <section class="checkout-card form-card">
-          <h2>顾客信息</h2>
+          <h2>Asiakastiedot</h2>
           <form class="customer-form" id="orderForm" novalidate>
             <div class="field">
-              <label for="customerName">姓名</label>
-              <input id="customerName" name="customerName" type="text" autocomplete="name" placeholder="请输入姓名" />
+              <label for="customerName">Nimi</label>
+              <input id="customerName" name="customerName" type="text" autocomplete="name" placeholder="Kirjoita nimi" />
             </div>
             <div class="field">
-              <label for="customerPhone">电话</label>
-              <input id="customerPhone" name="customerPhone" type="tel" autocomplete="tel" placeholder="请输入电话" />
+              <label for="customerPhone">Puhelin</label>
+              <input id="customerPhone" name="customerPhone" type="tel" autocomplete="tel" placeholder="Kirjoita puhelinnumero" />
             </div>
             <div class="field">
-              <label for="customerLocation">桌号/地址</label>
-              <input id="customerLocation" name="customerLocation" type="text" placeholder="例如：5号桌 / Helsinki..." />
+              <label for="customerLocation">Pöytä/osoite</label>
+              <input id="customerLocation" name="customerLocation" type="text" placeholder="Esim. pöytä 5 / osoite" />
             </div>
             <div class="form-error" id="formError" role="alert"></div>
-            <button class="submit-button" type="submit">提交订单</button>
+            <button class="submit-button" type="submit">Lähetä tilaus</button>
           </form>
         </section>
 
         <section class="checkout-card order-result" id="orderResult" aria-live="polite">
           <div class="result-head">
             <div>
-              <h2>短信内容</h2>
+              <h2>Tilauksen viesti</h2>
               <p class="order-meta" id="orderMeta"></p>
               <p class="send-status" id="sendStatus"></p>
             </div>
-            <button class="copy-button" id="copySms" type="button">复制</button>
+            <button class="copy-button" id="copySms" type="button">Kopioi</button>
           </div>
           <pre class="sms-box" id="smsText"></pre>
         </section>
@@ -638,81 +664,42 @@
   </main>
 
   <script>
-    const menuItems = [
-      {
-        id: "pizza-margherita",
-        name: "玛格丽特披萨",
-        category: "主食",
-        description: "番茄酱、马苏里拉、罗勒和初榨橄榄油，薄底现烤。",
-        price: 12.9,
-        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=700&q=80"
-      },
-      {
-        id: "truffle-pasta",
-        name: "黑松露奶油意面",
-        category: "主食",
-        description: "奶油酱、蘑菇、帕玛森芝士和黑松露香气。",
-        price: 14.5,
-        image: "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?auto=format&fit=crop&w=700&q=80"
-      },
-      {
-        id: "grilled-salmon",
-        name: "香煎三文鱼",
-        category: "主菜",
-        description: "外脆内嫩的三文鱼，搭配柠檬黄油汁和时蔬。",
-        price: 18.8,
-        image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=700&q=80"
-      },
-      {
-        id: "ribeye-steak",
-        name: "肋眼牛排",
-        category: "主菜",
-        description: "炭烤肋眼牛排，可备注熟度，配黑椒汁。",
-        price: 24.9,
-        image: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=700&q=80"
-      },
-      {
-        id: "garden-salad",
-        name: "田园鲜蔬沙拉",
-        category: "轻食",
-        description: "混合生菜、牛油果、小番茄和香草油醋汁。",
-        price: 9.6,
-        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=700&q=80"
-      },
-      {
-        id: "tomato-soup",
-        name: "番茄罗勒浓汤",
-        category: "轻食",
-        description: "慢煮番茄浓汤，带罗勒清香，适合餐前暖胃。",
-        price: 7.2,
-        image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=700&q=80"
-      },
-      {
-        id: "tiramisu",
-        name: "经典提拉米苏",
-        category: "甜品",
-        description: "咖啡浸润手指饼干，马斯卡彭奶酪口感轻盈。",
-        price: 6.8,
-        image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=700&q=80"
-      },
-      {
-        id: "lemon-tea",
-        name: "手作柠檬冰茶",
-        category: "饮品",
-        description: "新鲜柠檬、红茶和少量蜂蜜，清爽解腻。",
-        price: 4.6,
-        image: "https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=700&q=80"
-      }
-    ];
+    const CATEGORIES = ["Kaikki", "Alkuruoka", "Sushi", "Kana", "Härkää", "Possu", "Juomat", "Jälkiruoat"];
+    const CATEGORY_ALIASES = {
+      "Alkuruoat ja keitot": "Alkuruoka",
+      "Alkuruoat": "Alkuruoka",
+      "Alkuruoka": "Alkuruoka",
+      "Sushi": "Sushi",
+      "Kanaa": "Kana",
+      "Kana": "Kana",
+      "Häränlihaa": "Härkää",
+      "Härkää": "Härkää",
+      "Porsaanlihaa": "Possu",
+      "Possua": "Possu",
+      "Possu": "Possu",
+      "Juomat": "Juomat",
+      "Jälkiruoat": "Jälkiruoat",
+      "Jälkiruoka": "Jälkiruoat"
+    };
+    const OTHER_MENU_HEADINGS = new Set([
+      "Merenantimia",
+      "Ankka",
+      "Tofu",
+      "Muut",
+      "Kaksi pientä",
+      "Kolme pientä",
+      "Neljä pientä",
+      "Lasten annokset"
+    ]);
+    let menuItems = [];
 
     const state = {
-      activeCategory: "全部",
+      activeCategory: "Kaikki",
       cart: {}
     };
 
-    // 如果前端放在 GitHub Pages，后端放在 Render/Railway，把这里改成后端公网地址。
-    // 例如：https://your-menu-backend.onrender.com
-    // 如果前端和后端部署在同一个域名，保持空字符串即可。
+    // If the frontend is on GitHub Pages and the backend is on Render/Railway,
+    // set this to the backend public URL. Keep it empty when both run on one domain.
     const API_BASE_URL = "";
 
     const categoryTabs = document.getElementById("categoryTabs");
@@ -742,8 +729,94 @@
         .replaceAll("'", "&#039;");
     }
 
+    function isPriceLine(line) {
+      return /^\d+(?:[,.]\d{1,2})?\s*€$/.test(line);
+    }
+
+    function parsePrice(line) {
+      return Number(line.replace("€", "").trim().replace(",", "."));
+    }
+
+    function createDishId(name, index) {
+      return `${index}-${name}`
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+
+    function parseMenuText(text) {
+      const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      const parsedItems = [];
+      let currentCategory = "";
+
+      for (let index = 0; index < lines.length; index += 1) {
+        const line = lines[index];
+
+        if (CATEGORY_ALIASES[line]) {
+          currentCategory = CATEGORY_ALIASES[line];
+          continue;
+        }
+
+        if (OTHER_MENU_HEADINGS.has(line)) {
+          currentCategory = "";
+          continue;
+        }
+
+        if (!currentCategory || !CATEGORIES.includes(currentCategory) || currentCategory === "Kaikki") {
+          continue;
+        }
+
+        const priceLine = lines[index + 1];
+        if (!priceLine || !isPriceLine(priceLine)) {
+          continue;
+        }
+
+        let description = "";
+        const possibleDescription = lines[index + 2];
+        const lineAfterDescription = lines[index + 3];
+        const descriptionLooksLikeNextName = possibleDescription && lineAfterDescription && isPriceLine(lineAfterDescription);
+
+        if (
+          possibleDescription &&
+          !CATEGORY_ALIASES[possibleDescription] &&
+          !OTHER_MENU_HEADINGS.has(possibleDescription) &&
+          !descriptionLooksLikeNextName
+        ) {
+          description = possibleDescription;
+          index += 2;
+        } else {
+          index += 1;
+        }
+
+        parsedItems.push({
+          id: createDishId(line, parsedItems.length + 1),
+          name: line,
+          category: currentCategory,
+          description,
+          price: parsePrice(priceLine)
+        });
+      }
+
+      return parsedItems;
+    }
+
+    async function loadMenuItems() {
+      if (window.location.protocol === "file:") {
+        throw new Error("Avaa sivu palvelimen kautta: http://127.0.0.1:3000/index.html");
+      }
+
+      const response = await fetch("menu", { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error("Menua ei voitu ladata.");
+      }
+
+      menuItems = parseMenuText(await response.text());
+    }
+
     function getCategories() {
-      return ["全部", ...new Set(menuItems.map((item) => item.category))];
+      return CATEGORIES;
     }
 
     function getCartItem(id) {
@@ -783,18 +856,23 @@
     }
 
     function renderMenu() {
-      const visibleItems = state.activeCategory === "全部"
+      const visibleItems = state.activeCategory === "Kaikki"
         ? menuItems
         : menuItems.filter((item) => item.category === state.activeCategory);
 
-      menuCount.textContent = `${visibleItems.length} 道菜`;
+      menuCount.textContent = `${visibleItems.length} annosta`;
+
+      if (visibleItems.length === 0) {
+        menuGrid.innerHTML = `<div class="empty-menu">Tässä kategoriassa ei ole vielä tuotteita.</div>`;
+        return;
+      }
+
       menuGrid.innerHTML = visibleItems
         .map((item) => {
           const cartItem = getCartItem(item.id);
 
           return `
             <article class="dish-card">
-              <img class="dish-image" src="${item.image}" alt="${item.name}" loading="lazy" />
               <div class="dish-body">
                 <div class="dish-head">
                   <h3 class="dish-title">${escapeHtml(item.name)}</h3>
@@ -804,11 +882,11 @@
                 <p class="dish-desc">${escapeHtml(item.description)}</p>
                 <div class="dish-actions">
                   <div class="qty-row">
-                    <span class="qty-label">数量</span>
-                    <div class="stepper" aria-label="${escapeHtml(item.name)} 数量">
-                      <button type="button" data-action="decrease" data-id="${item.id}" aria-label="减少 ${escapeHtml(item.name)}">-</button>
+                    <span class="qty-label">Määrä</span>
+                    <div class="stepper" aria-label="${escapeHtml(item.name)} määrä">
+                      <button type="button" data-action="decrease" data-id="${item.id}" aria-label="Vähennä ${escapeHtml(item.name)}">-</button>
                       <span class="qty-value" id="qty-${item.id}">${cartItem.quantity}</span>
-                      <button type="button" data-action="increase" data-id="${item.id}" aria-label="增加 ${escapeHtml(item.name)}">+</button>
+                      <button type="button" data-action="increase" data-id="${item.id}" aria-label="Lisää ${escapeHtml(item.name)}">+</button>
                     </div>
                   </div>
                   <textarea
@@ -816,7 +894,7 @@
                     data-action="note"
                     data-id="${item.id}"
                     rows="2"
-                    placeholder="备注：少辣、不要香菜、牛排熟度..."
+                    placeholder="Huomio: ei chiliä, ei sipulia..."
                   >${escapeHtml(cartItem.note)}</textarea>
                 </div>
               </div>
@@ -830,11 +908,11 @@
       const selectedItems = getSelectedItems();
       const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
 
-      cartCount.textContent = `${totalQuantity} 件`;
+      cartCount.textContent = `${totalQuantity} kpl`;
       cartTotal.textContent = formatPrice(getTotal());
 
       if (selectedItems.length === 0) {
-        cartItems.innerHTML = `<div class="empty-cart">还没有选择菜品</div>`;
+        cartItems.innerHTML = `<div class="empty-cart">Ostoskori on tyhjä</div>`;
         return;
       }
 
@@ -845,7 +923,7 @@
               <span>${escapeHtml(item.name)} x${item.quantity}</span>
               <span>${formatPrice(item.price * item.quantity)}</span>
             </div>
-            <p class="cart-note">备注：${escapeHtml(item.note.trim() || "无")}</p>
+            <p class="cart-note">Huomio: ${escapeHtml(item.note.trim() || "Ei huomioita")}</p>
           </div>
         `)
         .join("");
@@ -875,7 +953,7 @@
     }
 
     function getLocalTimeText(date) {
-      return date.toLocaleString("zh-CN", {
+      return date.toLocaleString("fi-FI", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -888,21 +966,22 @@
       const orderLines = order.items
         .map((item, index) => {
           return `${index + 1}. ${item.name} x${item.quantity}
-备注：${item.note.trim() || "无"}`;
+Huomio: ${item.note.trim() || "Ei huomioita"}`;
         })
         .join("\n\n");
 
-      return `新订单 #${order.number}
+      return `Uusi tilaus #${order.number}
 
-顾客：${order.customer.name}
-电话：${order.customer.phone}
-桌号/地址：${order.customer.location}
+Asiakas: ${order.customer.name}
+Puhelin: ${order.customer.phone}
+Pöytä/osoite: ${order.customer.location}
+Maksu: Maksaminen maksetaan kassalla
 
-订单：
+Tilaus:
 ${orderLines}
 
-总价：${formatPrice(order.total)}
-时间：${order.time}`;
+Yhteensä: ${formatPrice(order.total)}
+Aika: ${order.time}`;
     }
 
     function showError(message) {
@@ -924,25 +1003,25 @@ ${orderLines}
       const selectedItems = getSelectedItems();
 
       if (!customer.name) {
-        showError("请填写姓名。");
+        showError("Kirjoita nimi.");
         document.getElementById("customerName").focus();
         return;
       }
 
       if (!customer.phone) {
-        showError("请填写电话。");
+        showError("Kirjoita puhelinnumero.");
         document.getElementById("customerPhone").focus();
         return;
       }
 
       if (!customer.location) {
-        showError("请填写桌号或地址。");
+        showError("Kirjoita pöytä tai osoite.");
         document.getElementById("customerLocation").focus();
         return;
       }
 
       if (selectedItems.length === 0) {
-        showError("请至少选择一道菜。");
+        showError("Valitse vähintään yksi annos.");
         return;
       }
 
@@ -959,15 +1038,15 @@ ${orderLines}
 
       const sms = buildSmsText(order);
       smsText.textContent = sms;
-      orderMeta.textContent = `订单编号：${order.number}`;
-      sendStatus.textContent = "正在发送到 Telegram...";
+      orderMeta.textContent = `Tilausnumero: ${order.number}`;
+      sendStatus.textContent = "Lähetetään Telegramiin...";
       sendStatus.className = "send-status";
       orderResult.classList.add("show");
       orderResult.scrollIntoView({ behavior: "smooth", block: "start" });
 
       try {
         const result = await sendSMS(order, sms);
-        sendStatus.textContent = result.message || "Telegram 已发送。";
+        sendStatus.textContent = result.message || "Telegram-viesti lähetetty.";
         sendStatus.className = "send-status success";
       } catch (error) {
         sendStatus.textContent = error.message;
@@ -976,9 +1055,9 @@ ${orderLines}
     }
 
     async function sendSMS(order, message) {
-      // 后端会读取环境变量中的 Telegram Bot Token 和 Chat ID，再调用 Telegram Bot API。
+      // The backend reads Telegram credentials from environment variables and calls Telegram Bot API.
       if (window.location.protocol === "file:") {
-        throw new Error("请通过后端地址打开页面，例如 http://127.0.0.1:3000");
+        throw new Error("Avaa sivu palvelimen kautta, esimerkiksi http://127.0.0.1:3000");
       }
 
       const response = await fetch(`${API_BASE_URL.replace(/\/$/, "")}/api/send-order`, {
@@ -991,7 +1070,7 @@ ${orderLines}
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.ok) {
-        throw new Error(data.error || "Telegram 发送失败，请检查后端配置。");
+        throw new Error(data.error || "Telegram-lähetys epäonnistui. Tarkista palvelimen asetukset.");
       }
 
       return data;
@@ -1032,21 +1111,32 @@ ${orderLines}
 
       try {
         await navigator.clipboard.writeText(smsText.textContent);
-        copySms.textContent = "已复制";
+        copySms.textContent = "Kopioitu";
         setTimeout(() => {
-          copySms.textContent = "复制";
+          copySms.textContent = "Kopioi";
         }, 1600);
       } catch (error) {
-        copySms.textContent = "复制失败";
+        copySms.textContent = "Kopiointi epäonnistui";
         setTimeout(() => {
-          copySms.textContent = "复制";
+          copySms.textContent = "Kopioi";
         }, 1600);
       }
     });
 
-    renderCategories();
-    renderMenu();
-    renderCart();
+    async function init() {
+      renderCategories();
+      renderCart();
+      menuGrid.innerHTML = `<div class="empty-menu">Ladataan menu...</div>`;
+
+      try {
+        await loadMenuItems();
+        renderMenu();
+      } catch (error) {
+        menuGrid.innerHTML = `<div class="empty-menu">${escapeHtml(error.message)}</div>`;
+      }
+    }
+
+    init();
   </script>
 </body>
 </html>

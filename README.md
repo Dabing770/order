@@ -36,6 +36,8 @@ http://127.0.0.1:3000/index.html
 
 需要部署整个 Node.js 项目，而不是只上传 `index.html`。否则 Telegram token 会暴露在前端。
 
+仓库里必须包含 `menu` 文件，页面会从这个文件读取菜单内容。
+
 推荐用支持 Node.js Web Service 的平台，例如 Railway、Render、Fly.io、VPS 等。
 
 部署时在平台后台设置这些环境变量：

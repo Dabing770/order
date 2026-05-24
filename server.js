@@ -117,7 +117,7 @@ function readJsonBody(request) {
       body += chunk;
       if (Buffer.byteLength(body) > MAX_BODY_SIZE) {
         request.destroy();
-        reject(new Error("请求内容太大。"));
+        reject(new Error("Pyyntö on liian suuri."));
       }
     });
 
@@ -125,40 +125,40 @@ function readJsonBody(request) {
       try {
         resolve(JSON.parse(body || "{}"));
       } catch (error) {
-        reject(new Error("请求 JSON 格式不正确。"));
+        reject(new Error("Pyynnön JSON-muoto on virheellinen."));
       }
     });
 
     request.on("error", () => {
-      reject(new Error("读取请求失败。"));
+      reject(new Error("Pyynnön lukeminen epäonnistui."));
     });
   });
 }
 
 function validateOrderPayload(payload) {
   if (!payload || typeof payload !== "object") {
-    return "订单内容不能为空。";
+    return "Tilaus ei voi olla tyhjä.";
   }
 
   if (!payload.order || typeof payload.order !== "object") {
-    return "缺少订单数据。";
+    return "Tilauksen tiedot puuttuvat.";
   }
 
   const { customer, items, total } = payload.order;
   if (!customer?.name || !customer?.phone || !customer?.location) {
-    return "缺少顾客姓名、电话或桌号/地址。";
+    return "Asiakkaan nimi, puhelin tai pöytä/osoite puuttuu.";
   }
 
   if (!Array.isArray(items) || items.length === 0) {
-    return "订单至少需要一道菜。";
+    return "Tilauksessa pitää olla vähintään yksi annos.";
   }
 
   if (!Number.isFinite(Number(total))) {
-    return "订单总价格式不正确。";
+    return "Tilauksen yhteissumma on virheellinen.";
   }
 
   if (!payload.message || typeof payload.message !== "string") {
-    return "缺少 Telegram 消息内容。";
+    return "Telegram-viestin sisältö puuttuu.";
   }
 
   return "";
@@ -168,7 +168,7 @@ function clampTelegramMessage(message) {
   const trimmed = message.trim();
   if (trimmed.length <= 3900) return trimmed;
 
-  return `${trimmed.slice(0, 3900)}\n\n订单内容过长，已截断。`;
+  return `${trimmed.slice(0, 3900)}\n\nTilaus oli liian pitkä ja sitä lyhennettiin.`;
 }
 
 async function sendTelegramMessage(text) {
@@ -176,7 +176,7 @@ async function sendTelegramMessage(text) {
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) {
-    throw new Error("后端未配置 TELEGRAM_BOT_TOKEN 或 TELEGRAM_CHAT_ID。");
+    throw new Error("Palvelimelta puuttuu TELEGRAM_BOT_TOKEN tai TELEGRAM_CHAT_ID.");
   }
 
   const apiUrl = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -214,13 +214,13 @@ async function handleSendOrder(request, response, corsHeaders) {
     const result = await sendTelegramMessage(payload.message);
     sendJson(response, 200, {
       ok: true,
-      message: "Telegram 已发送。",
+      message: "Telegram-viesti lähetetty.",
       telegramMessageId: result.message_id
     }, corsHeaders);
   } catch (error) {
     sendJson(response, 500, {
       ok: false,
-      error: error.message || "Telegram 发送失败。"
+      error: error.message || "Telegram-lähetys epäonnistui."
     }, corsHeaders);
   }
 }
