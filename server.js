@@ -214,7 +214,7 @@ async function handleSendOrder(request, response, corsHeaders) {
     const result = await sendTelegramMessage(payload.message);
     sendJson(response, 200, {
       ok: true,
-      message: "Telegram-viesti lähetetty.",
+      message: "Tilaus lähetetty.",
       telegramMessageId: result.message_id
     }, corsHeaders);
   } catch (error) {
