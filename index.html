@@ -1039,14 +1039,14 @@ Aika: ${order.time}`;
       const sms = buildSmsText(order);
       smsText.textContent = sms;
       orderMeta.textContent = `Tilausnumero: ${order.number}`;
-      sendStatus.textContent = "Lähetetään Telegramiin...";
+      sendStatus.textContent = "Lähetetään Tilausta";
       sendStatus.className = "send-status";
       orderResult.classList.add("show");
       orderResult.scrollIntoView({ behavior: "smooth", block: "start" });
 
       try {
         const result = await sendSMS(order, sms);
-        sendStatus.textContent = result.message || "Telegram-viesti lähetetty.";
+        sendStatus.textContent = result.message || "Tilaus lähetetty.";
         sendStatus.className = "send-status success";
       } catch (error) {
         sendStatus.textContent = error.message;
@@ -1070,7 +1070,7 @@ Aika: ${order.time}`;
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.ok) {
-        throw new Error(data.error || "Telegram-lähetys epäonnistui. Tarkista palvelimen asetukset.");
+        throw new Error(data.error || "Tilaus-lähetys epäonnistui. Tarkista palvelimen asetukset.");
       }
 
       return data;
