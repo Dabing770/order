@@ -7,7 +7,7 @@ const ROOT = __dirname;
 loadEnvFile();
 
 const PORT = Number(process.env.PORT || 3000);
-const HOST = process.env.HOST || "127.0.0.1";
+const HOST = process.env.HOST || "0.0.0.0";
 const MAX_BODY_SIZE = 1024 * 1024;
 
 function loadEnvFile() {
@@ -38,10 +38,28 @@ function loadEnvFile() {
   }
 }
 
-function sendJson(response, statusCode, data) {
+function getCorsHeaders(request) {
+  const allowedOrigin = process.env.ALLOWED_ORIGIN || "*";
+  const requestOrigin = request.headers.origin;
+  let origin = "*";
+
+  if (allowedOrigin !== "*") {
+    const allowedOrigins = allowedOrigin.split(",").map((value) => value.trim()).filter(Boolean);
+    origin = allowedOrigins.includes(requestOrigin) ? requestOrigin : allowedOrigins[0];
+  }
+
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+  };
+}
+
+function sendJson(response, statusCode, data, extraHeaders = {}) {
   response.writeHead(statusCode, {
     "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store"
+    "Cache-Control": "no-store",
+    ...extraHeaders
   });
   response.end(JSON.stringify(data));
 }
@@ -183,13 +201,13 @@ async function sendTelegramMessage(text) {
   return data.result;
 }
 
-async function handleSendOrder(request, response) {
+async function handleSendOrder(request, response, corsHeaders) {
   try {
     const payload = await readJsonBody(request);
     const validationError = validateOrderPayload(payload);
 
     if (validationError) {
-      sendJson(response, 400, { ok: false, error: validationError });
+      sendJson(response, 400, { ok: false, error: validationError }, corsHeaders);
       return;
     }
 
@@ -198,28 +216,35 @@ async function handleSendOrder(request, response) {
       ok: true,
       message: "Telegram 已发送。",
       telegramMessageId: result.message_id
-    });
+    }, corsHeaders);
   } catch (error) {
     sendJson(response, 500, {
       ok: false,
       error: error.message || "Telegram 发送失败。"
-    });
+    }, corsHeaders);
   }
 }
 
 const server = http.createServer((request, response) => {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
+  const corsHeaders = getCorsHeaders(request);
+
+  if (requestUrl.pathname.startsWith("/api/") && request.method === "OPTIONS") {
+    response.writeHead(204, corsHeaders);
+    response.end();
+    return;
+  }
 
   if (request.method === "GET" && requestUrl.pathname === "/api/health") {
     sendJson(response, 200, {
       ok: true,
       telegramConfigured: Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID)
-    });
+    }, corsHeaders);
     return;
   }
 
   if (request.method === "POST" && requestUrl.pathname === "/api/send-order") {
-    handleSendOrder(request, response);
+    handleSendOrder(request, response, corsHeaders);
     return;
   }
 

@@ -710,6 +710,11 @@
       cart: {}
     };
 
+    // 如果前端放在 GitHub Pages，后端放在 Render/Railway，把这里改成后端公网地址。
+    // 例如：https://your-menu-backend.onrender.com
+    // 如果前端和后端部署在同一个域名，保持空字符串即可。
+    const API_BASE_URL = "";
+
     const categoryTabs = document.getElementById("categoryTabs");
     const menuGrid = document.getElementById("menuGrid");
     const menuCount = document.getElementById("menuCount");
@@ -976,7 +981,7 @@ ${orderLines}
         throw new Error("请通过后端地址打开页面，例如 http://127.0.0.1:3000");
       }
 
-      const response = await fetch("/api/send-order", {
+      const response = await fetch(`${API_BASE_URL.replace(/\/$/, "")}/api/send-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
