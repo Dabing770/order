@@ -664,37 +664,15 @@
   </main>
 
   <script>
-    const CATEGORIES = ["Kaikki", "Alkuruoka", "Sushi", "Kana", "Härkää", "Possu", "Juomat", "Jälkiruoat"];
+    const CATEGORIES = ["Juomat"];
     const CATEGORY_ALIASES = {
-      "Alkuruoat ja keitot": "Alkuruoka",
-      "Alkuruoat": "Alkuruoka",
-      "Alkuruoka": "Alkuruoka",
-      "Sushi": "Sushi",
-      "Kanaa": "Kana",
-      "Kana": "Kana",
-      "Häränlihaa": "Härkää",
-      "Härkää": "Härkää",
-      "Porsaanlihaa": "Possu",
-      "Possua": "Possu",
-      "Possu": "Possu",
-      "Juomat": "Juomat",
-      "Jälkiruoat": "Jälkiruoat",
-      "Jälkiruoka": "Jälkiruoat"
+      "Juomat": "Juomat"
     };
-    const OTHER_MENU_HEADINGS = new Set([
-      "Merenantimia",
-      "Ankka",
-      "Tofu",
-      "Muut",
-      "Kaksi pientä",
-      "Kolme pientä",
-      "Neljä pientä",
-      "Lasten annokset"
-    ]);
+    const OTHER_MENU_HEADINGS = new Set();
     let menuItems = [];
 
     const state = {
-      activeCategory: "Kaikki",
+      activeCategory: "Juomat",
       cart: {}
     };
 

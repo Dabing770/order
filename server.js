@@ -216,6 +216,7 @@ async function handleSendOrder(request, response, corsHeaders) {
       ok: true,
       message: "Tilaus lähetetty.",
       telegramMessageId: result.message_id
+      
     }, corsHeaders);
   } catch (error) {
     sendJson(response, 500, {
